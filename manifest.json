@@ -1,0 +1,53 @@
+{
+   "author": "Tweety0ff",
+   "background": {
+      "service_worker": "background.js"
+   },
+   "content_scripts": [
+      {
+         "css": [
+            "css/main.css"
+         ],
+         "js": [
+            "js/libraries/jquery-3.6.1.min.js",
+            "js/pages/content.js"
+         ],
+         "matches": [
+            "*://*.roblox.com/games/*",
+            "*://*.roblox.com/*/games/*"
+         ],
+         "run_at": "document_end"
+      }
+   ],
+   "description": "Find a specific Roblox player in public servers by their avatar and join their server in one click. Pick a username, search, and get a list of servers with player avatars.",
+   "host_permissions": [
+      "*://*.roblox.com/games/",
+      "*://*.roblox.com/*/games/",
+      "https://apis.rovalra.com/*"
+   ],
+   "icons": {
+      "128": "images/128x128.png",
+      "16": "images/16x16.png",
+      "32": "images/32x32.png",
+      "48": "images/48x48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAifUBJhrqUQbKuGwQLRXwcj5CqqiIXC/GBUUuO9SyOOUnlBI9d/8C5uPRPgsPlfHdY3kAFCPKL0HOFx+1VoiDQ/eGwE2Hd0uVjB4qwlALBoeSY8+vJExXJipmmGtZ4l1mpRh+0K0VCQRglyVa0nU8j6/q+O+G0uKkExwvu2PC9jh0iry+nPMRvq9wESodhOyUbEOMCPHU3YuGRL86GzNdj1/PaPYGrAwX8DJNHK8lJVh0E7oKPszbIchCiIyWMXA/YcvMhM7ne2c6257jHeAOPdj+IsULy1AVCXoI8ju+GauHmasvFvCt+zZbKTLmXSF74P1M8250X1pP1gaDOLs5TwIDAQAB",
+   "manifest_version": 3,
+   "name": "Roblox Server Sniper",
+   "permissions": [
+      "storage"
+   ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0.0",
+   "web_accessible_resources": [
+      {
+         "matches": [
+            "<all_urls>"
+         ],
+         "resources": [
+            "images/*",
+            "html/main.html"
+         ]
+      }
+   ]
+}
