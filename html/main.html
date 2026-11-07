@@ -1,0 +1,148 @@
+<!-- Спрайт иконок (Lucide, stroke 1.5) -->
+<svg class="rorsl-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <symbol id="rorsl-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="rorsl-i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></symbol>
+  <symbol id="rorsl-i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="rorsl-i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="rorsl-i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="rorsl-i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="rorsl-i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+</svg>
+
+<!-- Единственная кнопка на странице игры -->
+<button type="button" id="rorsl-open" class="rorsl-launch" aria-haspopup="dialog" aria-controls="rorsl-modal">
+  <span class="rorsl-launch-icon"><svg class="rorsl-i" aria-hidden="true"><use href="#rorsl-i-search"/></svg></span>
+  <span class="rorsl-launch-label">Find player</span>
+  <svg class="rorsl-i rorsl-launch-arrow" aria-hidden="true"><use href="#rorsl-i-arrow"/></svg>
+</button>
+
+<!-- Большая панель (JS переносит её в <body>) -->
+<div id="rorsl-modal" role="dialog" aria-modal="true" aria-labelledby="rorsl-title">
+  <div class="rorsl-dialog">
+
+    <!-- ZONE 1: header -->
+    <header class="rorsl-header">
+      <div class="rorsl-heading">
+        <h3 class="rorsl-title" id="rorsl-title">Roblox Player Sniper</h3>
+        <p id="rorsl-status" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="rorsl-actions">
+        <label class="rorsl-field" title="User that the extension will search for in the servers.">
+          <svg class="rorsl-i" aria-hidden="true"><use href="#rorsl-i-search"/></svg>
+          <input class="rorsl-field-input" type="text" id="rorsl-username" maxlength="20" placeholder="Search player username…" autocomplete="off" spellcheck="false" aria-label="Player username">
+        </label>
+        <span id="rorsl-search-container" class="rorsl-btn-wrap">
+          <button type="button" id="rorsl-search" class="rorsl-btn rorsl-btn--primary" title="Search for live servers">
+            <svg class="rorsl-i" aria-hidden="true"><use href="#rorsl-i-search"/></svg><span>Search</span>
+          </button>
+        </span>
+        <span id="rorsl-reload-container" class="rorsl-btn-wrap">
+          <button type="button" id="rorsl-reload" class="rorsl-btn rorsl-btn--icon"
+                  title="Updates the server display and its settings, Doesn't get live servers (servers are from when the search button was last pressed)"
+                  aria-label="Refresh display" disabled>
+            <svg class="rorsl-i" aria-hidden="true"><use href="#rorsl-i-reload"/></svg>
+          </button>
+        </span>
+        <button type="button" id="rorsl-theme" class="rorsl-btn rorsl-btn--icon rorsl-theme" title="Switch theme" aria-label="Switch theme">
+          <svg class="rorsl-i rorsl-theme-moon" aria-hidden="true"><use href="#rorsl-i-moon"/></svg>
+          <svg class="rorsl-i rorsl-theme-sun" aria-hidden="true"><use href="#rorsl-i-sun"/></svg>
+        </button>
+        <button type="button" id="rorsl-close" class="rorsl-btn rorsl-btn--icon" title="Close" aria-label="Close">
+          <svg class="rorsl-i" aria-hidden="true"><use href="#rorsl-i-x"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Панель под шапкой: кого ищем + страницы (появляется после первого поиска) -->
+    <div class="rorsl-toolbar">
+      <div class="rorsl-target">
+        <span class="rorsl-avatar-frame"><img id="rorsl-userImage" alt=""></span>
+        <div class="rorsl-target-text">
+          <p id="rorsl-userName"></p>
+          <p id="rorsl-userStatus"></p>
+        </div>
+      </div>
+      <div class="rorsl-pager" style="display: none;">
+        <span id="rorsl-maxPagesBegin">Page</span>
+        <input type="number" id="rorsl-page" class="rorsl-input rorsl-input--page" value="1" min="1" title="Current page, keeps settings since last refresh or search">
+        <span id="rorsl-maxPagesEnd"></span>
+      </div>
+    </div>
+
+    <!-- ZONE 2: настройки слева + результаты справа (каждая колонка скроллится сама) -->
+    <div class="rorsl-body">
+
+      <aside id="rorsl-settings">
+        <div class="rorsl-settings-scroll">
+          <p class="rorsl-section">Settings</p>
+
+          <div class="rorsl-row">
+            <div class="rorsl-row-text">
+              <label class="rorsl-row-name" for="rorsl-autoAttach">Auto-Search</label>
+              <p class="rorsl-row-desc">Automatically searches for servers the second the panel is loaded.</p>
+            </div>
+            <label class="rorsl-toggle"><input type="checkbox" id="rorsl-autoAttach"><span class="rorsl-toggle-track"></span></label>
+          </div>
+
+          <div class="rorsl-row">
+            <div class="rorsl-row-text">
+              <label class="rorsl-row-name" for="rorsl-listSize">Servers per page</label>
+              <p class="rorsl-row-desc">The amount of servers displayed per page. Default 15, max 250.</p>
+            </div>
+            <input class="rorsl-input rorsl-input--sm" type="number" id="rorsl-listSize" min="1">
+          </div>
+
+          <div class="rorsl-row">
+            <div class="rorsl-row-text">
+              <label class="rorsl-row-name" for="rorsl-descending">Ascending Player Count</label>
+              <p class="rorsl-row-desc">Servers will order from smallest amount of players to largest.</p>
+            </div>
+            <label class="rorsl-toggle"><input type="checkbox" id="rorsl-descending"><span class="rorsl-toggle-track"></span></label>
+          </div>
+
+          <!-- Advanced: отделено полосой и подписью -->
+          <p class="rorsl-section rorsl-section--rule">Advanced</p>
+          <p class="rorsl-warn">Do not change unless you know what you are doing!</p>
+
+          <div class="rorsl-row">
+            <div class="rorsl-row-text">
+              <label class="rorsl-row-name" for="rorsl-searchPasses">Search Passes</label>
+              <p class="rorsl-row-desc">Number of times the extension searches through the Roblox API to find servers; it can sometimes skip over some on larger games. Max 10, recommended 1–3.</p>
+            </div>
+            <input class="rorsl-input rorsl-input--sm" type="number" id="rorsl-searchPasses" value="1" min="1" max="10">
+          </div>
+        </div>
+      </aside>
+
+      <section class="rorsl-main">
+        <div class="rorsl-results-scroll">
+          <ul id="rorsl-results"></ul>
+
+          <!-- пустые состояния: показывает CSS по [data-state] -->
+          <div class="rorsl-ph" data-for="idle">
+            <svg class="rorsl-i rorsl-ph-icon" aria-hidden="true"><use href="#rorsl-i-search"/></svg>
+            <p class="rorsl-ph-title">Nothing here yet</p>
+            <p class="rorsl-ph-text">Enter a username and press Search. If a player isn't found, Roblox may be hiding them, or they were not in the search.</p>
+          </div>
+          <div class="rorsl-ph" data-for="loading">
+            <span class="rorsl-spinner"></span>
+            <p class="rorsl-ph-title">Searching…</p>
+            <p class="rorsl-ph-text">Bigger games require longer searches.</p>
+          </div>
+          <div class="rorsl-ph" data-for="empty">
+            <svg class="rorsl-i rorsl-ph-icon" aria-hidden="true"><use href="#rorsl-i-search"/></svg>
+            <p class="rorsl-ph-title">No servers found</p>
+            <p class="rorsl-ph-text">Try searching again in a moment.</p>
+          </div>
+          <div class="rorsl-ph" data-for="error">
+            <svg class="rorsl-i rorsl-ph-icon" aria-hidden="true"><use href="#rorsl-i-alert"/></svg>
+            <p class="rorsl-ph-title">Search failed</p>
+            <p class="rorsl-ph-text">Check your connection and try again.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
