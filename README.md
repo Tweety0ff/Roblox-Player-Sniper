@@ -6,7 +6,7 @@
 
 **Find a specific Roblox player in a game's public servers by their avatar — and join their server in one click.**
 
-![version](https://img.shields.io/badge/version-1.0.0-f2f2f2?style=for-the-badge&labelColor=151517) ![manifest](https://img.shields.io/badge/manifest-V3-f2f2f2?style=for-the-badge&labelColor=151517) ![platform](https://img.shields.io/badge/platform-Chromium-f2f2f2?style=for-the-badge&labelColor=151517&logo=googlechrome&logoColor=f2f2f2) ![built%20with](https://img.shields.io/badge/built%20with-JavaScript-f2f2f2?style=for-the-badge&labelColor=151517&logo=javascript&logoColor=f2f2f2) [![license](https://img.shields.io/badge/license-MIT-f2f2f2?style=for-the-badge&labelColor=151517)](LICENSE)
+![version](https://img.shields.io/badge/version-1.1.0-f2f2f2?style=for-the-badge&labelColor=151517) ![manifest](https://img.shields.io/badge/manifest-V3-f2f2f2?style=for-the-badge&labelColor=151517) ![platform](https://img.shields.io/badge/platform-Chromium-f2f2f2?style=for-the-badge&labelColor=151517&logo=googlechrome&logoColor=f2f2f2) ![built%20with](https://img.shields.io/badge/built%20with-JavaScript-f2f2f2?style=for-the-badge&labelColor=151517&logo=javascript&logoColor=f2f2f2) [![license](https://img.shields.io/badge/license-MIT-f2f2f2?style=for-the-badge&labelColor=151517)](LICENSE)
 
 <br>
 
