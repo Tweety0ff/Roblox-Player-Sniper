@@ -1,0 +1,1069 @@
+/* ==========================================================================
+   RORSL — кнопка на странице игры + большая панель
+   Селекторы ограничены #rorsl-panel (кнопка) и #rorsl-modal (панель в <body>).
+   ========================================================================== */
+
+:is(#rorsl-panel, #rorsl-modal) {
+  --rorsl-bg: #151517;
+  --rorsl-card: #1b1b1e;
+  --rorsl-field: #101012;
+  --rorsl-tile: #232327;
+  --rorsl-hover: #26262a;
+  --rorsl-line: rgba(255, 255, 255, 0.08);
+  --rorsl-line-strong: rgba(255, 255, 255, 0.18);
+  --rorsl-text: #f2f2f2;
+  --rorsl-muted: #8b8b93;
+  --rorsl-accent: #f2f2f2;
+  --rorsl-accent-hover: #ffffff;
+  --rorsl-accent-text: #151517;
+  --rorsl-track-off: #34343a;
+  --rorsl-thumb-off: #8b8b93;
+  --rorsl-danger: #ff6b6b;
+  --rorsl-scroll: rgba(255, 255, 255, 0.16);
+  --rorsl-backdrop: rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+
+:is(#rorsl-panel, #rorsl-modal)[data-theme="light"] {
+  --rorsl-bg: #f6f6f7;
+  --rorsl-card: #ffffff;
+  --rorsl-field: #ffffff;
+  --rorsl-tile: #ececef;
+  --rorsl-hover: #ececef;
+  --rorsl-line: rgba(0, 0, 0, 0.08);
+  --rorsl-line-strong: rgba(0, 0, 0, 0.2);
+  --rorsl-text: #151517;
+  --rorsl-muted: #6b6b73;
+  --rorsl-accent: #151517;
+  --rorsl-accent-hover: #000000;
+  --rorsl-accent-text: #f2f2f2;
+  --rorsl-track-off: #d4d4d9;
+  --rorsl-thumb-off: #8b8b93;
+  --rorsl-danger: #d93636;
+  --rorsl-scroll: rgba(0, 0, 0, 0.2);
+  --rorsl-backdrop: rgba(0, 0, 0, 0.4);
+  color-scheme: light;
+}
+
+:is(#rorsl-panel, #rorsl-modal),
+:is(#rorsl-panel, #rorsl-modal) *,
+:is(#rorsl-panel, #rorsl-modal) *::before,
+:is(#rorsl-panel, #rorsl-modal) *::after { box-sizing: border-box; }
+
+:is(#rorsl-panel, #rorsl-modal) :where(h3, p, label, strong, ul, li) {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+}
+
+.rorsl-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.rorsl-i {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Кнопка на странице ---------- */
+#rorsl-panel {
+  display: block;
+  margin: 0 0 16px;
+  padding: 0;
+  font: 400 13px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+#rorsl-panel .rorsl-launch:focus-visible,
+#rorsl-modal .rorsl-btn:focus-visible,
+#rorsl-modal .rorsl-join:focus-visible,
+#rorsl-modal .rorsl-toggle input:focus-visible + .rorsl-toggle-track {
+  outline: 2px solid var(--rorsl-text);
+  outline-offset: 2px;
+}
+
+/* ---------- Панель ---------- */
+html.rorsl-lock { overflow: hidden !important; }
+
+#rorsl-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--rorsl-backdrop);
+  color: var(--rorsl-text);
+  font: 400 13px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+#rorsl-modal[open] { visibility: visible; opacity: 1; pointer-events: auto; }
+
+#rorsl-modal .rorsl-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(1120px, 100%);
+  height: min(760px, 100%);
+  border: 1px solid var(--rorsl-line);
+  border-radius: 16px;
+  background: var(--rorsl-bg);
+  overflow: hidden;
+}
+
+/* ---------- Header ---------- */
+#rorsl-modal .rorsl-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px;
+  border-bottom: 1px solid var(--rorsl-line);
+}
+
+#rorsl-modal .rorsl-heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#rorsl-modal .rorsl-title {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* подзаголовок = статус поиска */
+#rorsl-modal #rorsl-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--rorsl-muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+#rorsl-modal #rorsl-status::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--rorsl-muted);
+}
+
+#rorsl-modal #rorsl-status:empty::before { display: none; }
+#rorsl-modal #rorsl-status:empty::after { content: "Find a player by avatar in public servers"; }
+
+#rorsl-modal[data-state="loading"] #rorsl-status::before {
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+  margin-right: -2px;
+  border: 1.5px solid var(--rorsl-line-strong);
+  border-top-color: var(--rorsl-text);
+  background: transparent;
+  animation: rorsl-spin 800ms linear infinite;
+}
+
+#rorsl-modal[data-state="done"] #rorsl-status { color: var(--rorsl-text); }
+#rorsl-modal[data-state="done"] #rorsl-status::before { background: var(--rorsl-text); }
+
+#rorsl-modal[data-state="empty"] #rorsl-status::before {
+  background: transparent;
+  border: 1.5px solid var(--rorsl-muted);
+}
+
+#rorsl-modal[data-state="error"] #rorsl-status { color: var(--rorsl-danger); }
+#rorsl-modal[data-state="error"] #rorsl-status::before { background: var(--rorsl-danger); }
+
+#rorsl-modal .rorsl-actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* поле поиска игрока */
+#rorsl-modal .rorsl-field {
+  position: relative;
+  display: block;
+  width: 240px;
+}
+
+#rorsl-modal .rorsl-field > .rorsl-i {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  color: var(--rorsl-muted);
+  pointer-events: none;
+}
+
+#rorsl-modal .rorsl-field-input {
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  padding: 0 12px 0 36px;
+  border: 1px solid var(--rorsl-line);
+  border-radius: 8px;
+  background: var(--rorsl-field);
+  box-shadow: none;
+  color: var(--rorsl-text);
+  font: 400 12px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  outline: none;
+  transition: border-color 150ms;
+}
+
+#rorsl-modal .rorsl-field-input::placeholder { color: var(--rorsl-muted); }
+#rorsl-modal .rorsl-field-input:hover { border-color: var(--rorsl-line-strong); }
+#rorsl-modal .rorsl-field-input:focus { border-color: var(--rorsl-muted); }
+
+/* Старый JS ставит на эти обёртки inline opacity — гасим, "disabled" рисует сама кнопка */
+#rorsl-modal .rorsl-btn-wrap {
+  display: inline-flex;
+  opacity: 1 !important;
+  background: none !important;
+}
+
+#rorsl-modal .rorsl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 32px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--rorsl-line);
+  border-radius: 8px;
+  background: var(--rorsl-card);
+  box-shadow: none;
+  color: var(--rorsl-text);
+  font: 500 12px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms, opacity 150ms;
+}
+
+#rorsl-modal .rorsl-btn--icon { width: 32px; padding: 0; }
+#rorsl-modal .rorsl-btn:hover:not(:disabled) { background: var(--rorsl-hover); border-color: var(--rorsl-line-strong); }
+#rorsl-modal .rorsl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#rorsl-modal .rorsl-btn--primary {
+  border-color: transparent;
+  background: var(--rorsl-accent);
+  color: var(--rorsl-accent-text);
+  font-weight: 600;
+}
+
+#rorsl-modal .rorsl-btn--primary:hover:not(:disabled) { background: var(--rorsl-accent-hover); border-color: transparent; }
+
+/* ---------- Панель под шапкой ---------- */
+#rorsl-modal .rorsl-toolbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rorsl-line);
+}
+
+#rorsl-modal:not([data-state]) .rorsl-toolbar { display: none; }
+
+#rorsl-modal .rorsl-target {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+#rorsl-modal .rorsl-avatar-frame {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--rorsl-tile);
+  box-shadow: 0 0 0 1px var(--rorsl-line-strong);
+  overflow: hidden;
+}
+
+#rorsl-modal #rorsl-userImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.15);
+  transition: opacity 400ms ease, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#rorsl-modal #rorsl-userImage.is-loaded { opacity: 1; transform: none; }
+
+/* пока аватар грузится — мягкий shimmer */
+#rorsl-modal .rorsl-avatar-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, var(--rorsl-line-strong) 50%, transparent 80%);
+  background-size: 200% 100%;
+  animation: rorsl-shimmer 1.4s linear infinite;
+  opacity: 1;
+  transition: opacity 300ms;
+  pointer-events: none;
+}
+
+#rorsl-modal .rorsl-avatar-frame:has(#rorsl-userImage.is-loaded)::after { opacity: 0; animation: none; }
+
+#rorsl-modal .rorsl-target-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+#rorsl-modal #rorsl-userName {
+  color: var(--rorsl-text);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#rorsl-modal #rorsl-userName:empty { display: none; }
+
+#rorsl-modal #rorsl-userStatus {
+  color: var(--rorsl-muted);
+  font-size: 11px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+#rorsl-modal #rorsl-userStatus:empty { display: none; }
+
+#rorsl-modal .rorsl-pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: none;
+  color: var(--rorsl-muted);
+  font-size: 12px;
+  line-height: 16px;
+  user-select: none;
+}
+
+#rorsl-modal .rorsl-input {
+  height: 32px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--rorsl-line);
+  border-radius: 8px;
+  background: var(--rorsl-field);
+  box-shadow: none;
+  color: var(--rorsl-text);
+  font: 400 12px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  outline: none;
+  transition: border-color 150ms;
+}
+
+#rorsl-modal .rorsl-input:hover { border-color: var(--rorsl-line-strong); }
+#rorsl-modal .rorsl-input:focus { border-color: var(--rorsl-muted); }
+#rorsl-modal .rorsl-input--sm { width: 72px; }
+#rorsl-modal .rorsl-input--page { width: 56px; height: 28px; padding: 0 8px; text-align: center; }
+
+/* ---------- Body ---------- */
+#rorsl-modal .rorsl-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+#rorsl-modal #rorsl-settings {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  min-height: 0;
+  border-right: 1px solid var(--rorsl-line);
+}
+
+#rorsl-modal .rorsl-settings-scroll,
+#rorsl-modal .rorsl-results-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rorsl-scroll) transparent;
+  /* затухание внизу: последняя строка не упирается в край */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 16px), transparent);
+}
+
+#rorsl-modal .rorsl-settings-scroll::-webkit-scrollbar,
+#rorsl-modal .rorsl-results-scroll::-webkit-scrollbar { width: 6px; }
+#rorsl-modal .rorsl-settings-scroll::-webkit-scrollbar-thumb,
+#rorsl-modal .rorsl-results-scroll::-webkit-scrollbar-thumb { border-radius: 8px; background: var(--rorsl-scroll); }
+
+#rorsl-modal .rorsl-settings-scroll { padding: 16px 12px 16px 16px; }
+
+#rorsl-modal .rorsl-section {
+  margin-bottom: 4px;
+  color: var(--rorsl-muted);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* полоса + подпись перед Advanced */
+#rorsl-modal .rorsl-section--rule {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rorsl-line-strong);
+}
+
+#rorsl-modal .rorsl-warn {
+  margin-bottom: 4px;
+  color: var(--rorsl-danger);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+/* Строка настройки: текст слева, контрол справа */
+#rorsl-modal .rorsl-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rorsl-line);
+}
+
+#rorsl-modal .rorsl-row:last-child { border-bottom: 0; }
+
+#rorsl-modal .rorsl-row-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+#rorsl-modal .rorsl-row-name {
+  display: block;
+  color: var(--rorsl-text);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#rorsl-modal .rorsl-row-desc {
+  color: var(--rorsl-muted);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+/* Тумблер 40x24 */
+#rorsl-modal .rorsl-toggle {
+  position: relative;
+  flex: none;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  cursor: pointer;
+}
+
+#rorsl-modal .rorsl-toggle input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#rorsl-modal .rorsl-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: var(--rorsl-track-off);
+  transition: background-color 150ms;
+  pointer-events: none;
+}
+
+#rorsl-modal .rorsl-toggle-track::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--rorsl-thumb-off);
+  transition: transform 150ms, background-color 150ms;
+}
+
+#rorsl-modal .rorsl-toggle input:checked + .rorsl-toggle-track { background: var(--rorsl-accent); }
+
+#rorsl-modal .rorsl-toggle input:checked + .rorsl-toggle-track::before {
+  background: var(--rorsl-accent-text);
+  transform: translateX(16px);
+}
+
+/* ---------- Результаты: сетка карточек ---------- */
+#rorsl-modal .rorsl-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#rorsl-modal .rorsl-results-scroll { padding: 16px 12px 16px 16px; }
+
+#rorsl-modal #rorsl-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(244px, 1fr));
+  gap: 12px;
+  list-style: none;
+}
+
+#rorsl-modal .rorsl-server {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--rorsl-line);
+  border-radius: 12px;
+  background: var(--rorsl-card);
+  list-style: none;
+  transition: border-color 150ms;
+}
+
+#rorsl-modal .rorsl-server:hover { border-color: var(--rorsl-line-strong); }
+#rorsl-modal .rorsl-server.is-match { border-color: var(--rorsl-accent); }
+
+#rorsl-modal .rorsl-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#rorsl-modal .rorsl-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--rorsl-tile);
+  overflow: hidden;
+}
+
+#rorsl-modal .rorsl-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#rorsl-modal .rorsl-avatar--more {
+  color: var(--rorsl-muted);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+#rorsl-modal .rorsl-server-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--rorsl-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+#rorsl-modal .rorsl-server.is-match .rorsl-server-meta::after {
+  content: "Found";
+  padding: 0 8px;
+  border-radius: 8px;
+  background: var(--rorsl-accent);
+  color: var(--rorsl-accent-text);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+#rorsl-modal .rorsl-friends {
+  color: var(--rorsl-muted);
+  font-size: 11px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+#rorsl-modal .rorsl-friend,
+#rorsl-modal .rorsl-friend:link,
+#rorsl-modal .rorsl-friend:visited {
+  display: inline-block;
+  margin-right: 4px;
+  color: var(--rorsl-text);
+  text-decoration: none;
+}
+
+#rorsl-modal .rorsl-friend:hover { text-decoration: underline; }
+
+#rorsl-modal .rorsl-join {
+  width: 100%;
+  height: 32px;
+  margin: auto 0 0;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--rorsl-accent);
+  box-shadow: none;
+  color: var(--rorsl-accent-text);
+  font: 600 12px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+#rorsl-modal .rorsl-join:hover { background: var(--rorsl-accent-hover); }
+
+/* Пустые состояния: idle / loading / empty / error */
+#rorsl-modal .rorsl-ph {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 96px 16px;
+  text-align: center;
+}
+
+#rorsl-modal:not([data-state]) .rorsl-ph[data-for="idle"],
+#rorsl-modal[data-state="loading"] .rorsl-ph[data-for="loading"],
+#rorsl-modal[data-state="empty"] .rorsl-ph[data-for="empty"],
+#rorsl-modal[data-state="error"] .rorsl-ph[data-for="error"] { display: flex; }
+
+#rorsl-modal .rorsl-ph-icon { width: 24px; height: 24px; color: var(--rorsl-muted); }
+#rorsl-modal .rorsl-ph-title { font-size: 13px; line-height: 20px; font-weight: 600; }
+#rorsl-modal .rorsl-ph-text { color: var(--rorsl-muted); font-size: 12px; line-height: 16px; }
+
+#rorsl-modal .rorsl-spinner {
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--rorsl-line-strong);
+  border-top-color: var(--rorsl-text);
+  border-radius: 50%;
+  animation: rorsl-spin 800ms linear infinite;
+}
+
+/* ---------- Узкие экраны ---------- */
+@media (max-width: 860px) {
+  #rorsl-modal { padding: 0; }
+  #rorsl-modal .rorsl-dialog { width: 100%; height: 100%; border: 0; border-radius: 0; }
+  #rorsl-modal .rorsl-header { flex-wrap: wrap; }
+  #rorsl-modal .rorsl-actions { width: 100%; flex-wrap: wrap; }
+  #rorsl-modal .rorsl-field { flex: 1 1 160px; width: auto; }
+  #rorsl-modal .rorsl-body { flex-direction: column; overflow-y: auto; }
+  #rorsl-modal #rorsl-settings { width: auto; border-right: 0; border-bottom: 1px solid var(--rorsl-line); }
+  #rorsl-modal .rorsl-settings-scroll,
+  #rorsl-modal .rorsl-results-scroll { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  #rorsl-modal .rorsl-main { min-height: auto; }
+}
+
+@keyframes rorsl-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  #rorsl-panel *,
+  #rorsl-modal,
+  #rorsl-modal * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ==========================================================================
+   Кнопка "Find player"
+   ========================================================================== */
+#rorsl-panel .rorsl-launch {
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  margin: 0;
+  padding: 0 16px 0 6px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--rorsl-accent);
+  box-shadow: 0 0 0 1px var(--rorsl-line-strong), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  color: var(--rorsl-accent-text);
+  font: 600 13px/20px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  animation: rorsl-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  transition: transform 300ms var(--ease-spring), box-shadow 300ms ease, background-color 200ms ease;
+}
+
+#rorsl-panel .rorsl-launch::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  transition: left 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+#rorsl-panel .rorsl-launch-icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--rorsl-accent-text);
+  color: var(--rorsl-accent);
+  transition: transform 400ms var(--ease-spring);
+}
+
+#rorsl-panel .rorsl-launch-arrow {
+  width: 14px;
+  height: 14px;
+  margin-left: -2px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 250ms ease, transform 350ms var(--ease-spring);
+}
+
+#rorsl-panel .rorsl-launch:hover {
+  background: var(--rorsl-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--rorsl-line-strong), 0 14px 28px -14px rgba(0, 0, 0, 0.7);
+}
+
+#rorsl-panel .rorsl-launch:hover::after { left: 130%; }
+#rorsl-panel .rorsl-launch:hover .rorsl-launch-icon { transform: rotate(-10deg) scale(1.1); }
+#rorsl-panel .rorsl-launch:hover .rorsl-launch-arrow { opacity: 1; transform: none; }
+#rorsl-panel .rorsl-launch:active { transform: translateY(0) scale(0.97); transition-duration: 120ms; }
+
+/* ==========================================================================
+   Переключатель темы (луна/солнце)
+   ========================================================================== */
+#rorsl-modal .rorsl-theme { position: relative; overflow: hidden; }
+
+#rorsl-modal .rorsl-theme .rorsl-i {
+  position: absolute;
+  transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 300ms ease;
+}
+
+/* тёмная тема: видна луна, солнце спрятано */
+#rorsl-modal .rorsl-theme-sun { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+#rorsl-modal[data-theme="light"] .rorsl-theme-moon { opacity: 0; transform: rotate(90deg) scale(0.4); }
+#rorsl-modal[data-theme="light"] .rorsl-theme-sun { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   Анимации
+   ========================================================================== */
+:is(#rorsl-panel, #rorsl-modal) {
+  --rorsl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --rorsl-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* плавная смена темы (класс ставит JS на 500мс) */
+#rorsl-panel.rorsl-theming,
+#rorsl-panel.rorsl-theming *,
+#rorsl-modal.rorsl-theming,
+#rorsl-modal.rorsl-theming *,
+#rorsl-modal.rorsl-theming *::before {
+  transition: background-color 400ms ease, border-color 400ms ease, color 400ms ease, box-shadow 400ms ease, opacity 300ms ease !important;
+}
+
+/* открытие / закрытие */
+#rorsl-modal {
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  transition: opacity 300ms ease, backdrop-filter 400ms ease, -webkit-backdrop-filter 400ms ease, visibility 0s linear 400ms, background-color 400ms ease;
+}
+
+#rorsl-modal[open] {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition-delay: 0s;
+}
+
+#rorsl-modal .rorsl-dialog {
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  transition: transform 450ms var(--rorsl-ease), opacity 300ms ease, background-color 400ms ease, border-color 400ms ease;
+}
+
+#rorsl-modal[open] .rorsl-dialog { opacity: 1; transform: none; }
+
+/* поэтапное появление блоков при открытии */
+#rorsl-modal[open] .rorsl-header,
+#rorsl-modal[open] .rorsl-settings-scroll > *,
+#rorsl-modal[open] .rorsl-ph {
+  animation: rorsl-rise 600ms var(--rorsl-ease) backwards;
+}
+
+#rorsl-modal[open] .rorsl-header { animation-delay: 80ms; }
+#rorsl-modal[open] .rorsl-ph { animation-delay: 200ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(1) { animation-delay: 140ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(2) { animation-delay: 180ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(3) { animation-delay: 220ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(4) { animation-delay: 260ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(5) { animation-delay: 300ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(6) { animation-delay: 340ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(7) { animation-delay: 380ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(8) { animation-delay: 420ms; }
+#rorsl-modal[open] .rorsl-settings-scroll > :nth-child(n + 9) { animation-delay: 460ms; }
+
+/* панель под шапкой и пагинация */
+#rorsl-modal .rorsl-toolbar { animation: rorsl-drop 500ms var(--rorsl-ease) backwards; }
+#rorsl-modal .rorsl-pager { animation: rorsl-fade 400ms ease backwards; }
+
+/* карточки серверов: каскад + аватары "выпрыгивают" */
+#rorsl-modal .rorsl-server {
+  animation: rorsl-rise 550ms var(--rorsl-ease) backwards;
+  animation-delay: calc(var(--i, 0) * 40ms);
+  transition: transform 300ms var(--rorsl-ease), border-color 200ms ease, background-color 400ms ease, box-shadow 300ms ease;
+}
+
+#rorsl-modal .rorsl-server:hover {
+  box-shadow: 0 16px 32px -20px rgba(0, 0, 0, 0.7);
+}
+
+#rorsl-modal .rorsl-avatar {
+  animation: rorsl-pop 500ms var(--rorsl-spring) backwards;
+  animation-delay: calc(var(--i, 0) * 40ms + 120ms + var(--a, 0) * 45ms);
+  transition: transform 250ms var(--rorsl-spring);
+}
+
+#rorsl-modal .rorsl-avatar:hover { transform: scale(1.12); }
+
+/* кнопки */
+#rorsl-modal .rorsl-btn,
+#rorsl-modal .rorsl-join {
+  transition: transform 250ms var(--rorsl-spring), background-color 200ms ease, border-color 200ms ease, opacity 200ms ease, color 200ms ease;
+}
+
+/* no translate on hover: moving the element away from the cursor made hover flicker */
+
+#rorsl-modal .rorsl-btn:active:not(:disabled),
+#rorsl-modal .rorsl-join:active { transform: scale(0.95); transition-duration: 100ms; }
+
+#rorsl-modal .rorsl-btn--primary:hover:not(:disabled) .rorsl-i { animation: rorsl-wiggle 500ms ease; }
+#rorsl-modal #rorsl-reload:hover:not(:disabled) .rorsl-i { transform: rotate(180deg); }
+#rorsl-modal #rorsl-reload .rorsl-i { transition: transform 600ms var(--rorsl-ease); }
+#rorsl-modal #rorsl-close:hover .rorsl-i { transform: rotate(90deg); }
+#rorsl-modal #rorsl-close .rorsl-i { transition: transform 350ms var(--rorsl-spring); }
+
+/* тумблер с пружиной */
+#rorsl-modal .rorsl-toggle-track { transition: background-color 300ms ease; }
+
+#rorsl-modal .rorsl-toggle-track::before {
+  transition: transform 400ms var(--rorsl-spring), width 200ms ease, background-color 300ms ease;
+}
+
+#rorsl-modal .rorsl-toggle:active .rorsl-toggle-track::before { width: 20px; }
+#rorsl-modal .rorsl-toggle:active input:checked + .rorsl-toggle-track::before { transform: translateX(12px); }
+
+/* поля */
+#rorsl-modal .rorsl-field-input,
+#rorsl-modal .rorsl-input { transition: border-color 200ms ease, box-shadow 300ms ease, background-color 400ms ease; }
+#rorsl-modal .rorsl-field-input:focus,
+#rorsl-modal .rorsl-input:focus { box-shadow: 0 0 0 3px var(--rorsl-line); }
+
+#rorsl-modal .rorsl-field > .rorsl-i { transition: color 200ms ease, transform 300ms var(--rorsl-spring); }
+#rorsl-modal .rorsl-field:focus-within > .rorsl-i { color: var(--rorsl-text); transform: scale(1.1); }
+
+/* статус и подпись */
+#rorsl-modal #rorsl-status::before { transition: background-color 300ms ease; }
+#rorsl-modal[data-state="done"] #rorsl-status::before { animation: rorsl-pop 500ms var(--rorsl-spring) backwards; }
+#rorsl-modal .rorsl-ph-icon { animation: rorsl-float 3s ease-in-out infinite; }
+
+@keyframes rorsl-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rorsl-drop {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rorsl-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes rorsl-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rorsl-wiggle {
+  0% { transform: none; }
+  30% { transform: rotate(-14deg) scale(1.1); }
+  60% { transform: rotate(10deg) scale(1.1); }
+  100% { transform: none; }
+}
+
+@keyframes rorsl-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes rorsl-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   Кнопка "Find player": спокойная поверхность вместо яркой белой плашки
+   ========================================================================== */
+#rorsl-panel .rorsl-launch {
+  background: var(--rorsl-card);
+  color: var(--rorsl-text);
+  box-shadow: 0 0 0 1px var(--rorsl-line-strong);
+}
+
+#rorsl-panel .rorsl-launch::after {
+  background: linear-gradient(100deg, transparent, var(--rorsl-line-strong), transparent);
+}
+
+#rorsl-panel .rorsl-launch-icon {
+  background: var(--rorsl-accent);
+  color: var(--rorsl-accent-text);
+}
+
+#rorsl-panel .rorsl-launch:hover {
+  background: var(--rorsl-hover);
+  box-shadow: 0 0 0 1px var(--rorsl-muted), 0 12px 24px -14px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Region / Uptime / Job ID ---- */
+#rorsl-modal .rorsl-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--rorsl-line);
+}
+
+#rorsl-modal .rorsl-info > div {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+#rorsl-modal .rorsl-info dt { color: var(--rorsl-muted); margin: 0; }
+
+#rorsl-modal .rorsl-info dd {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--rorsl-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+#rorsl-modal .rorsl-jobid {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  overflow: hidden;
+  color: var(--rorsl-muted);
+  font: 400 11px/16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+#rorsl-modal .rorsl-jobid:hover { color: var(--rorsl-text); }
+
+#rorsl-modal .rorsl-info [hidden] { display: none; }
+
+#rorsl-modal .rorsl-getinfo {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--rorsl-line-strong);
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--rorsl-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms, opacity 150ms;
+}
+
+#rorsl-modal .rorsl-getinfo:hover:not(:disabled) { background: var(--rorsl-tile); }
+#rorsl-modal .rorsl-getinfo:disabled { opacity: .6; cursor: default; }
+#rorsl-modal .rorsl-getinfo[hidden] { display: none; }
+
+/* Region can be long ("Amsterdam, North Holland, Netherlands"): wrap instead of cutting */
+#rorsl-modal .rorsl-info > div:has(.rorsl-region) { align-items: start; }
+#rorsl-modal .rorsl-info .rorsl-region {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+
+/* Job ID is shown only after "Get server info"; wrap it fully */
+#rorsl-modal .rorsl-info:not(:has(.rorsl-info-extra:not([hidden]))) { display: none; }
+#rorsl-modal .rorsl-info > div:has(.rorsl-jobid) { align-items: start; }
+#rorsl-modal .rorsl-info dd:has(.rorsl-jobid) { overflow: visible; white-space: normal; }
+#rorsl-modal .rorsl-jobid {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+
+#rorsl-modal .rorsl-getinfo.is-loading { animation: rorsl-pulse 1s ease-in-out infinite; }
+@keyframes rorsl-pulse { 50% { opacity: .45; } }
+
+#rorsl-modal .rorsl-infozone { position: relative; }
+
+/* Get server info sits right above Join, so the buttons line up across cards */
+#rorsl-modal .rorsl-infozone { margin-top: auto; }
+#rorsl-modal .rorsl-infozone + .rorsl-join { margin-top: 0; }
